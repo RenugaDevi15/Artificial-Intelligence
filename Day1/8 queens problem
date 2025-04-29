@@ -1,0 +1,9 @@
+def solve(q=[], x=0):
+    if x == 8:
+        print(q)
+        return
+    for y in range(8):
+        if all(x != i and y != q[i] and abs(x - i) != abs(y - q[i]) for i in range(x)):
+            solve(q + [y], x + 1)
+
+solve()
