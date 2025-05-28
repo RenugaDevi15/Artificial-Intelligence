@@ -1,0 +1,41 @@
+from itertools import permutations
+
+def solve(puzzle):
+    # Split the puzzle into words and result
+    parts = puzzle.replace(' ', '').split('=')
+    words = parts[0].split('+')
+    result = parts[1]
+    
+    # Get all unique letters
+    letters = set(''.join(words + [result]))
+    
+    # First letters can't be zero
+    first_chars = {word[0] for word in words + [result]}
+    
+    # Try all possible digit assignments
+    for perm in permutations('0123456789', len(letters)):
+        # Skip if any first letter is zero
+        if any(perm[list(letters).index(c)] == '0' for c in first_chars):
+            continue
+            
+        # Create the mapping
+        mapping = {c: perm[i] for i, c in enumerate(letters)}
+        
+        # Convert words to numbers
+        nums = []
+        for word in words:
+            num = int(''.join([mapping[c] for c in word]))
+            nums.append(num)
+        
+        # Convert result to number
+        res = int(''.join([mapping[c] for c in result]))
+        
+        # Check if equation holds
+        if sum(nums) == res:
+            return mapping
+    
+    return "No solution"
+
+# Example usage
+puzzle = "SEND + MORE = MONEY"
+print(solve(puzzle))
