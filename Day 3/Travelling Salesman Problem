@@ -1,0 +1,60 @@
+from itertools import combinations
+
+def tsp_dp(distances):
+    n = len(distances)
+    memo = {}
+
+    # Base case: distance from start (0) to each other city
+    for k in range(1, n):
+        memo[(frozenset([k]), k)] = (distances[0][k], 0)
+
+    # Build memoization table for all subsets
+    for size in range(2, n):
+        for subset in combinations(range(1, n), size):
+            subset = frozenset(subset)
+            for current in subset:
+                best_cost = float('inf')
+                best_prev = None
+                for prev in subset:
+                    if prev == current:
+                        continue
+                    cost = memo[(subset - {current}, prev)][0] + distances[prev][current]
+                    if cost < best_cost:
+                        best_cost = cost
+                        best_prev = prev
+                memo[(subset, current)] = (best_cost, best_prev)
+
+    # Final step: return to the starting city (0)
+    full_set = frozenset(range(1, n))
+    min_cost = float('inf')
+    last_city = None
+    for k in range(1, n):
+        cost = memo[(full_set, k)][0] + distances[k][0]
+        if cost < min_cost:
+            min_cost = cost
+            last_city = k
+
+    # Reconstruct path
+    path = [0]
+    subset = full_set
+    while subset:
+        path.append(last_city)
+        _, last_city = memo[(subset, last_city)]
+        subset = subset - {path[-1]}
+    path.append(0)
+
+    return path, min_cost
+
+
+# Example usage
+if __name__ == "__main__":
+    distances = [
+        [0, 10, 15, 20],
+        [10, 0, 35, 25],
+        [15, 35, 0, 30],
+        [20, 25, 30, 0]
+    ]
+    
+    path, cost = tsp_dp(distances)
+    print("Optimal Path:", path)
+    print("Minimum Distance:", cost)
