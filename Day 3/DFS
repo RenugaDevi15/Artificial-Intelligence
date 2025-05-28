@@ -1,0 +1,23 @@
+def dfs(graph, start):
+    visited = set()
+    stack = [start]
+    
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            print(node)  # Process the node
+            visited.add(node)
+            stack.extend(reversed(graph[node]))  # Add neighbors in reverse order
+
+# Example usage:
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+print("DFS Traversal:")
+dfs(graph, 'A')
