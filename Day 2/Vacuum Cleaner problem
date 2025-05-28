@@ -1,0 +1,54 @@
+from collections import deque
+
+def vacuum_world():
+    # States: (vacuum_location, dirt_in_A, dirt_in_B)
+    # vacuum_location: 0 = Room A, 1 = Room B
+    # dirt: True = dirty, False = clean
+    
+    initial_state = (0, True, True)  # Start in Room A, both rooms dirty
+    goal_state = (0, False, False)   # Both rooms clean (position doesn't matter)
+    
+    # Possible actions: Left, Right, Suck
+    actions = {
+        0: ['Right', 'Suck'],  # In Room A
+        1: ['Left', 'Suck']    # In Room B
+    }
+    
+    visited = set()
+    queue = deque([(initial_state, [])])
+    
+    while queue:
+        current_state, path = queue.popleft()
+        
+        if current_state[1:] == goal_state[1:]:  # Check if both rooms are clean
+            return path
+        
+        if current_state not in visited:
+            visited.add(current_state)
+            
+            location, dirt_a, dirt_b = current_state
+            
+            for action in actions[location]:
+                new_state = None
+                
+                if action == 'Left':
+                    new_state = (0, dirt_a, dirt_b)
+                elif action == 'Right':
+                    new_state = (1, dirt_a, dirt_b)
+                elif action == 'Suck':
+                    if location == 0:
+                        new_state = (location, False, dirt_b)  # Clean Room A
+                    else:
+                        new_state = (location, dirt_a, False)  # Clean Room B
+                
+                if new_state and new_state not in visited:
+                    queue.append((new_state, path + [action]))
+    
+    return None
+
+# Solve and print the solution
+solution = vacuum_world()
+if solution:
+    print("Solution sequence:", solution)
+else:
+    print("No solution found")
