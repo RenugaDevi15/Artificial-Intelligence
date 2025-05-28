@@ -1,0 +1,42 @@
+from collections import deque
+
+def solve():
+    # State: (left_m, left_c, right_m, right_c, boat_position)
+    start = (3, 3, 0, 0, 'left')
+    goal = (0, 0, 3, 3, 'right')
+    moves = [(1,0), (2,0), (0,1), (0,2), (1,1)]
+    visited = set()
+    queue = deque([(start, [])])
+
+    while queue:
+        state, path = queue.popleft()
+        if state == goal:
+            return path + [state]
+        
+        if state in visited:
+            continue
+        visited.add(state)
+        
+        lm, lc, rm, rc, boat = state
+        for m, c in moves:
+            if boat == 'left':
+                new = (lm-m, lc-c, rm+m, rc+c, 'right')
+            else:
+                new = (lm+m, lc+c, rm-m, rc-c, 'left')
+            
+            # Check if move is valid
+            if (new[0] >= 0 and new[1] >= 0 and new[2] >= 0 and new[3] >= 0 and
+                (new[0] == 0 or new[0] >= new[1]) and
+                (new[2] == 0 or new[2] >= new[3])):
+                queue.append((new, path + [state]))
+
+    return None
+
+def print_solution(path):
+    for i, (lm, lc, rm, rc, boat) in enumerate(path):
+        print(f"Step {i}: {lm}M {lc}C | {rm}M {rc}C | Boat: {boat}")
+
+if solution := solve():
+    print_solution([(3, 3, 0, 0, 'left')] + solution)
+else:
+    print("No solution found")
