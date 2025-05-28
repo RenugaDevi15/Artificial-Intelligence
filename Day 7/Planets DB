@@ -1,0 +1,36 @@
+% Facts:
+% planet(Name, DistanceFromSunInMillionKm, DiameterInKm, NumberOfMoons).
+
+planet(mercury, 57.9, 4879, 0).
+planet(venus, 108.2, 12104, 0).
+planet(earth, 149.6, 12742, 1).
+planet(mars, 227.9, 6779, 2).
+planet(jupiter, 778.5, 139820, 79).
+planet(saturn, 1434, 116460, 83).
+planet(uranus, 2871, 50724, 27).
+planet(neptune, 4495, 49244, 14).
+
+% Rules
+
+% Find planets with more than N moons
+has_more_moons_than(Planet, N) :-
+    planet(Planet, _, _, Moons),
+    Moons > N.
+
+% Find planets closer to the sun than a given distance
+closer_than(Planet, Distance) :-
+    planet(Planet, D, _, _),
+    D < Distance.
+
+% Find planets larger in diameter than a given size
+larger_than(Planet, Diameter) :-
+    planet(Planet, _, D, _),
+    D > Diameter.
+
+% Find planets with no moons
+no_moons(Planet) :-
+    planet(Planet, _, _, 0).
+
+% List all planet names
+list_planets(Planet) :-
+    planet(Planet, _, _, _)
