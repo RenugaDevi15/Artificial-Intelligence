@@ -1,0 +1,35 @@
+% Facts: name(Name), dob(Name, DOB).
+% Date format: dob(Name, date(YYYY, MM, DD)).
+
+% Sample entries
+name(john_doe).
+dob(john_doe, date(1990, 5, 14)).
+
+name(jane_smith).
+dob(jane_smith, date(1985, 8, 23)).
+
+name(alice_wong).
+dob(alice_wong, date(1992, 12, 1)).
+
+name(bob_miller).
+dob(bob_miller, date(2000, 1, 30)).
+
+% Rules
+
+% Find DOB by name
+get_dob(Name, DOB) :-
+    dob(Name, DOB).
+
+% Find all people born in a specific year
+born_in_year(Year, Name) :-
+    dob(Name, date(Year, _, _)).
+
+% Find all people born before a certain year
+born_before_year(Year, Name) :-
+    dob(Name, date(Y, _, _)),
+    Y < Year.
+
+% Find all people born after a certain year
+born_after_year(Year, Name) :-
+    dob(Name, date(Y, _, _)),
+    Y > Year.
