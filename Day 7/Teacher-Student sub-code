@@ -1,0 +1,54 @@
+% Facts:
+% teacher(Name).
+% student(Name).
+% subject(SubjectName, SubjectCode).
+% teaches(TeacherName, SubjectCode).
+% enrolled(StudentName, SubjectCode).
+
+% Teachers
+teacher(john_smith).
+teacher(susan_jones).
+
+% Students
+student(alice_brown).
+student(bob_clark).
+student(eve_davis).
+
+% Subjects and Codes
+subject(mathematics, math101).
+subject(physics, phy201).
+subject(english, eng301).
+
+% Teaching Assignments
+teaches(john_smith, math101).
+teaches(john_smith, phy201).
+teaches(susan_jones, eng301).
+
+% Enrollment
+enrolled(alice_brown, math101).
+enrolled(alice_brown, eng301).
+enrolled(bob_clark, math101).
+enrolled(bob_clark, phy201).
+enrolled(eve_davis, eng301).
+
+% Rules
+
+% Who teaches a student?
+teacher_of(Student, Teacher) :-
+    enrolled(Student, Code),
+    teaches(Teacher, Code).
+
+% What subjects is a student enrolled in?
+student_subject(Student, Subject) :-
+    enrolled(Student, Code),
+    subject(Subject, Code).
+
+% Which students are taught by a teacher?
+students_of_teacher(Teacher, Student) :-
+    teaches(Teacher, Code),
+    enrolled(Student, Code).
+
+% What subject(s) does a teacher teach?
+teacher_subject(Teacher, Subject) :-
+    teaches(Teacher, Code),
+    subject(Subject, Code).
