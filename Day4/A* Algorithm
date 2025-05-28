@@ -1,0 +1,59 @@
+import heapq
+
+def a_star(graph, start, goal, heuristic):
+    open_set = [(0 + heuristic(start, goal), 0, start, [start])]
+    heapq.heapify(open_set)
+    
+    # Track visited nodes and their best g_scores
+    g_scores = {start: 0}
+    closed_set = set()
+    
+    while open_set:
+        _, g, current, path = heapq.heappop(open_set)
+        
+        if current == goal:
+            return path, g  # Found the path!
+        
+        if current in closed_set:
+            continue
+            
+        closed_set.add(current)
+        
+        for neighbor, cost in graph[current].items():
+            tentative_g = g + cost
+            
+            if neighbor not in g_scores or tentative_g < g_scores[neighbor]:
+                g_scores[neighbor] = tentative_g
+                f_score = tentative_g + heuristic(neighbor, goal)
+                heapq.heappush(open_set, (f_score, tentative_g, neighbor, path + [neighbor]))
+    
+    return None, float('inf')  # No path found
+
+# Example usage
+if __name__ == "__main__":
+    # Example graph (grid-like with movement costs)
+    graph = {
+        'A': {'B': 1, 'D': 3},
+        'B': {'A': 1, 'C': 2, 'E': 4},
+        'C': {'B': 2, 'F': 5},
+        'D': {'A': 3, 'E': 1},
+        'E': {'B': 4, 'D': 1, 'F': 2},
+        'F': {'C': 5, 'E': 2}
+    }
+    
+    # Manhattan distance heuristic (for grid-like graphs)
+    def heuristic(node, goal):
+        # Simple heuristic for this example
+        return 0  # This makes A* behave like Dijkstra's algorithm
+        # For real grid, you might use: return abs(x1-x2) + abs(y1-y2)
+    
+    start = 'A'
+    goal = 'F'
+    
+    path, cost = a_star(graph, start, goal, heuristic)
+    
+    if path:
+        print(f"Path found: {' -> '.join(path)}")
+        print(f"Total cost: {cost}")
+    else:
+        print("No path exists")
